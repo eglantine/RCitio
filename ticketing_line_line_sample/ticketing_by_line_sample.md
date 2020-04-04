@@ -1,23 +1,11 @@
----
-title: "Ticketing per direction demo"
-author: "Eglantine Schmitt"
-date: "04/04/2020"
-output: rmarkdown::github_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(httr)
-library(dplyr)
-library(ggplot2)
-source("../auth.R", chdir = T)
-group = "lorient"
-env = "staging"
-```
+Ticketing per direction demo
+================
+Eglantine Schmitt
+04/04/2020
 
 # Log in
 
-```{r}
+``` r
 sessionId = getSessionId(login_route, 
                          auth_route, 
                          credentials)
@@ -25,7 +13,7 @@ sessionId = getSessionId(login_route,
 
 # Retrieve referential information and ticketing data
 
-```{r}
+``` r
 lines = getResponseFromRoute(api_url,
                              sessionId,
                              "/rest/lines")
@@ -37,7 +25,7 @@ ticketing_raw_data = getResponseFromRoute(api_url,
 
 # Format and transform data
 
-```{r}
+``` r
 referential_lines = do.call(rbind.data.frame, c(lines, stringsAsFactors = F))
 ticketing_data = do.call(rbind.data.frame, c(ticketing_raw_data$data, stringsAsFactors = F))
 
@@ -57,27 +45,16 @@ ticketing_per_line =
 head(ticketing_per_line)
 ```
 
+    ## # A tibble: 6 x 2
+    ##   name  direction_in
+    ##   <chr>        <int>
+    ## 1 10              73
+    ## 2 11              41
+    ## 3 13              10
+    ## 4 14             101
+    ## 5 30               3
+    ## 6 31              22
+
 # Visualise
 
-```{r, echo= F}
-  ggplot(ticketing_per_line, 
-         aes(x= reorder(name, direction_in), 
-             y=direction_in, 
-             fill=name,
-             label=direction_in)) + 
-  geom_bar(stat="identity") +
-  ggtitle (paste0("Nombre de validations par ligne (",
-                  group,
-                  ", du ",
-                  min(ticketing_data$date),
-                  " au ",
-                  max(ticketing_data$date),
-                  ")")) +
-  ylab("Nombre de validations") +
-  xlab(element_blank()) +
-  scale_fill_manual(values=lines_colours)+ 
-  theme_minimal()+
-  theme(legend.position = "none")+
-  #  geom_text(aes(label=direction_in), position = position_stack(vjust = 0.95),color = "white") +
-  coord_flip()
-```
+![](ticketing_by_line_sample_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
