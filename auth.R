@@ -61,15 +61,7 @@ getReferentialSection = function(api_base_url,session_id, referential_section){
   return(referential_table)
 }
 
-getKPIdata = function(api_base_url, 
-                      kpi, 
-                      agency_id, 
-                      spatial_aggregation_level = "line", 
-                      aggregated_by_time = FALSE,
-                      aggregated_by_day = FALSE,
-                      start_date = Sys.Date() - 7, 
-                      end_date = Sys.Date(),
-                      days_of_the_week =  1111111){
+getKPIdata = function(api_base_url, kpi, agency_id, spatial_aggregation_level = "line", aggregated_by_time = FALSE,aggregated_by_day = FALSE, start_date = Sys.Date() - 7, end_date = Sys.Date(), days_of_the_week =  1111111){
   
   kpi_base_url = paste(api_base_url,
                     "kpis",
