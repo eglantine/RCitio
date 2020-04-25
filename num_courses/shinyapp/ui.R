@@ -24,14 +24,18 @@ shinyUI(fluidPage(theme = "bootstrap.css",
     dateInput("end_date", "Au ", value = Sys.Date()),
     selectInput("aggregation_level", "Agrégation", 
                 choices=c("jour" = "date",
-                          "ligne" = "aggregation_level_id", 
-                          "créneau horaire" = "time" ))
+                          "ligne" = "name", 
+                          "créneau horaire" = "time" )),
+    
+    downloadButton("downloadRawData", "Télécharger les données brutes")
+    
   ),
   
   mainPanel(
     tabsetPanel(type = "tabs", 
                 tabPanel("Données brutes", tableOutput("raw_data")),
-                tabPanel("Visualisation", tableOutput("bar_plot"))
+                tabPanel("Tableau", tableOutput("data_table")),
+                tabPanel("Visualisation", plotOutput("bar_plot"))
                 )
     )
   )
