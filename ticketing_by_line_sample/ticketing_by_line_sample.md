@@ -6,36 +6,34 @@ Eglantine Schmitt
 # Log in
 
 ``` r
-sessionId = getSessionId(login_route, 
-                         auth_route, 
-                         credentials)
+session_id = getSessionId(login, 
+                          password, 
+                          group, 
+                          env)
 ```
 
 # Retrieve referential information and ticketing data
 
 ``` r
-lines = getResponseFromRoute(api_url,
-                             sessionId,
-                             "/rest/lines")
+api_base_url = buildBaseUrl(group, env)
 
-ticketing_raw_data = getResponseFromRoute(api_url,
-                                          sessionId,
-                                          "/kpis/ticketing/agency/17/line?aggregated_by_time=false&included_date_perimeters=2020-03-26_2020-04-02_1111111&excluded_date_perimeters=&ticket_type_id=all")
+referential_lines = getReferentialSection(api_base_url,session_id,"lines")
+
+agency_id = getAgencyId(api_base_url, session_id)
+
+ticketing_data = getKPIdata(api_base_url,"ticketing",agency_id, start_date = "2020-03-26", end_date = "2020-04-02",session_id = session_id)
 ```
 
 # Format and transform data
 
 ``` r
-referential_lines = do.call(rbind.data.frame, c(lines, stringsAsFactors = F))
-ticketing_data = do.call(rbind.data.frame, c(ticketing_raw_data$data, stringsAsFactors = F))
-
 ticketing_data = merge(x = ticketing_data, 
                        y = referential_lines,
                        by.x = "aggregation_level_id", 
                        by.y = "id")
 
-lines_colours = unique(ticketing_data$colour)
-names(lines_colours) = unique(ticketing_data$name)
+lines_colours = referential_lines$colour
+names(lines_colours) = referential_lines$name
 
 ticketing_per_line = 
   ticketing_data %>%
@@ -48,12 +46,12 @@ head(ticketing_per_line)
     ## # A tibble: 6 x 2
     ##   name  direction_in
     ##   <chr>        <int>
-    ## 1 10              73
-    ## 2 11              41
-    ## 3 13              10
-    ## 4 14             101
-    ## 5 30               3
-    ## 6 31              22
+    ## 1 10             343
+    ## 2 11             351
+    ## 3 13             596
+    ## 4 14             820
+    ## 5 16               2
+    ## 6 30              15
 
 # Visualise
 

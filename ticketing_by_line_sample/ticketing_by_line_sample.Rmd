@@ -34,7 +34,7 @@ referential_lines = getReferentialSection(api_base_url,session_id,"lines")
 
 agency_id = getAgencyId(api_base_url, session_id)
 
-ticketing_data = getKPIdata(api_base_url,"ticketing",agency_id, start_date = "2020-03-26", end_date = "2020-04-02")
+ticketing_data = getKPIdata(api_base_url,"ticketing",agency_id, start_date = "2020-03-26", end_date = "2020-04-02",session_id = session_id)
 ```
 
 # Format and transform data
