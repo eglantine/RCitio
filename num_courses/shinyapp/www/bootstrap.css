@@ -6,16 +6,19 @@ html,body {
   box-shadow:none;
 }
 
-.btn {
+.btn,.btn-default {
 	color: #fff;
     background-color: #4D5978;
     margin-bottom: 15px
 }
 
-.btn-default:hover {
+.btn-default:hover,.btn-default:focus,.btn-default:active {
+	color: #fff;
     background-color: #46516d;
 }
+
 .btn-default:visited {
+	color: #fff;
     background-color: #838BA1;
 }
 
@@ -27,8 +30,9 @@ html,body {
 	padding:12px;
 }
 
-.form-control, .well,.selectize-input,.btn {
+.form-control, .well,.selectize-input,.btn,.btn-default {
     border:none;
+    box-shadow: none;
 }
 
 .well {
