@@ -3,6 +3,7 @@
 html,body {
   font-family: "Rubik", sans-serif;
   color:#4D5978;
+  box-shadow:none;
 }
 
 .btn {
@@ -12,8 +13,10 @@ html,body {
 }
 
 .btn-default:hover {
-    color: #fff;
     background-color: #46516d;
+}
+.btn-default:visited {
+    background-color: #838BA1;
 }
 
 .datepicker table tr td.active.active {
