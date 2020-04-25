@@ -5,18 +5,20 @@ library(dplyr)
 library(xml2)
 library(jsonlite)
 
-
 function(input, output) {
   
   source("utils/auth_copy.R", chdir = T)
   
-  global_values <- reactiveValues()
-  
   session_id = eventReactive(input$doLogin,{
     session_id = getSessionId(input$login, input$password, input$group, input$env)
-    print(paste0("Login successful with session_id ",session_id))
-    global_values$session_id = session_id
-  },ignoreInit = TRUE)
+    
+    if(!is.null(session_id)){
+      print(paste0("Login successful with session_id ",session_id))
+    }
+    
+    return(session_id)
+    
+  })
   
   num_courses = reactive({
     api_base_url = buildBaseUrl(input$group, input$env)
@@ -28,10 +30,8 @@ function(input, output) {
                         y = lines_referential,
                         by.x = "aggregation_level_id", 
                         by.y = "id")
-    # print(head(num_courses))
     
     return(num_courses)
-    
   })
   
   output$raw_data = renderTable({
@@ -39,10 +39,12 @@ function(input, output) {
   })
   
   plot_data = reactive({
+    
     plot_data =
       num_courses() %>%
       group_by_(input$aggregation_level) %>%
       summarise(num_normal_courses=sum(num_normal_courses))
+    
     return(plot_data)
   })
   
@@ -51,11 +53,10 @@ function(input, output) {
   })
   
   output$bar_plot = renderPlot({
-    print(head(input$aggregation_level))
     
     ggplot(plot_data(), 
            aes_string(x=input$aggregation_level,
-               y = "num_normal_courses")) +
+                      y = "num_normal_courses")) +
       geom_bar(stat="identity", fill = "#838BA1") +
       ylab("Nombre de courses réalisées") +
       xlab(element_blank()) + 

@@ -6,6 +6,16 @@ html,body {
   box-shadow:none;
 }
 
+a {
+	color:#838BA1;
+}
+
+a:hover,
+a:focus {
+  color: #4D5978;
+  background-color: #EFEFF7;
+}
+
 .btn,.btn-default {
 	color: #fff;
     background-color: #4D5978;
