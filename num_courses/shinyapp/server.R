@@ -1,16 +1,18 @@
 library(shiny)
 library(httr)
-library(purrr)
 library(ggplot2)
+library(dplyr)
+library(xml2)
+library(jsonlite)
 
 
 function(input, output) {
   
-  source("../../auth.R", chdir = T)
+  source("utils/auth_copy.R", chdir = T)
   
   global_values <- reactiveValues()
   
-  observeEvent(input$doLogin,{
+  session_id = eventReactive(input$doLogin,{
     session_id = getSessionId(input$login, input$password, input$group, input$env)
     print(paste0("Login successful with session_id ",session_id))
     global_values$session_id = session_id
@@ -18,9 +20,9 @@ function(input, output) {
   
   num_courses = reactive({
     api_base_url = buildBaseUrl(input$group, input$env)
-    agency_id = getAgencyId(api_base_url, global_values$session_id)
-    lines_referential = getReferentialSection(api_base_url,global_values$session_id,"lines")
-    num_courses = getKPIdata(api_base_url,"num_courses",agency_id,start_date = input$start_date,end_date = input$end_date, session_id=global_values$session_id)
+    agency_id = getAgencyId(api_base_url, session_id())
+    lines_referential = getReferentialSection(api_base_url,session_id(),"lines")
+    num_courses = getKPIdata(api_base_url,"num_courses",agency_id,start_date = input$start_date,end_date = input$end_date, session_id=session_id())
     
     num_courses = merge(x = num_courses, 
                         y = lines_referential,

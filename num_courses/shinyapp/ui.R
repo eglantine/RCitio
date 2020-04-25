@@ -1,4 +1,5 @@
 library(httr)
+library(purrr)
 library(shiny)
 
 agency_list = map(content(GET("http://django.gateway.staging.cit.io/groups/")), 1)
@@ -6,15 +7,15 @@ agency_list = sort(unlist(agency_list))
 
 
 shinyUI(fluidPage(theme = "bootstrap.css",
-                  img(src = "logo_citio.png"),
+                  img(src = "logo_citio.png",style="display: block; margin-left: auto; margin-right: auto;"),
 
   headerPanel("Nombre de courses réalisées"),
   
   sidebarPanel(
     textInput("login", "Identifiant", "eglantine@cit.io"),
     passwordInput("password", "Mot de passe",""),
-    selectInput("group", "Réseau", 
-                choices=agency_list),
+    selectInput("group", "Réseau",
+                choices=agency_list,selected = "casablanca"),
     selectInput("env", "Environnement", 
                 choices=c("staging", "production")),
 
