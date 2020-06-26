@@ -65,7 +65,8 @@ getAgencyId = function(api_base_url, session_id){
 getReferentialSection = function(api_base_url,session_id, referential_section){
   referential_route = paste0(api_base_url,"/rest/", referential_section)
   response = getResponseFromRoute(referential_route, session_id)
-  referential_table = do.call(rbind.data.frame, c(response, stringsAsFactors = F))
+#  referential_table = do.call(rbind.data.frame, c(response, stringsAsFactors = F, fill))
+  referential_table = data.table::rbindlist(response, fill = TRUE)
   return(referential_table)
 }
 
@@ -94,6 +95,7 @@ getKPIdata = function(api_base_url, kpi, agency_id, spatial_aggregation_level = 
   response = getResponseFromRoute(kpi_route, session_id)
   
   kpi_data_table = do.call(rbind.data.frame, c(response$data, stringsAsFactors = F))
+  # kpi_data_table = data.table::rbindlist(response$data, fill = TRUE)
   
   return(kpi_data_table)
   
@@ -105,7 +107,7 @@ getKPIdata = function(api_base_url, kpi, agency_id, spatial_aggregation_level = 
 #
 # session_id = getSessionId(login, password, group = "lorient", env = "staging")
 # 
-# api_base_url = buildBaseUrl(group = "lorient", env = "staging")
+# api_base_url = buildBaseUrl(group = "tramwayparis", env = "staging")
 # 
 # agency_id = getAgencyId(api_base_url, session_id)
 # 
